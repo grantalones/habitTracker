@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import datetime
+from collections import defaultdict
+
 
 app = Flask(__name__)
 habits = ["test habit", "test habit 2"]
-
+completions = defaultdict(list)
 
 
 
@@ -26,7 +28,8 @@ def index():
         "index.html",
         habits=habits,
         title="Habit Tracker - Home",
-        selected_date=selected_date
+        selected_date=selected_date,
+        completions=completions[selected_date]
     )
 
 
@@ -38,6 +41,12 @@ def add_habit():
 
 
 
+@app.route("/complete", methods=["POST"])
+def complete():
+    date_string = request.form.get("date")
+    habit = request.form.get("habitName")
+    date = datetime.date.fromisoformat(date_string)
+    completions[date].append(habit)
 
-
+    return redirect(url_for("index", date=date_string))
 
