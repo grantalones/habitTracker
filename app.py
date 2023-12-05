@@ -14,7 +14,7 @@ def create_app():
 
     client = MongoClient(os.environ.get("MONGODB_URI"))
 
-    app.db = client.get_default_database()
+    app.db = client.get_database("habitTracker")
 
     return app
 

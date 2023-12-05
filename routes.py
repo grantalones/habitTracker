@@ -58,10 +58,14 @@ def complete():
 def add_habit():
     today = today_at_midnight()
 
-    if request.form:
-        current_app.db.habits.insert_one(
-            {"_id": uuid.uuid4().hex, "added": today, "name": request.form.get("habit")}
-        )
+    if request.method == 'POST':
+        if request.form:
+            current_app.db.habits.insert_one(
+                {"_id": uuid.uuid4().hex, "added": today, "name": request.form.get("habit")}
+            )
+        return redirect(url_for(".index"))
+
+        # don't need to test request.method == 'GET'
 
     return render_template(
         "add_habit.html", title="Habit Tracker - Add Habit", selected_date=today
